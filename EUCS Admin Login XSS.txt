@@ -2,12 +2,12 @@ Reflected XSS (Cross-Site Scripting) attacks
 
 Type: Unauthenticated Remote attacks
 
-We have identified that the “eucsAdmin login” web page of “Exelysis Unified Communication Solution (EUCS)” product is vulnerable to "Reflective" Cross-site scripting (XSS) in two injection points. This is due to that the Web App fails to adequately sanitize request strings of malicious JavaScript. By leveraging this issue, an attacker is able to cause arbitrary HTML and JavaScript code to be executed in a user's browser within the security context of the affected site. This attack can be used in conjunction with a social engineering techniques.
+We have identified that the “eucsAdmin login” web page of “Exelysis Unified Communication Solution (EUCS)” product is vulnerable to "Reflective" Cross-site scripting (XSS) at two injection points. This is due to that the Web App fails to adequately sanitize request strings of malicious JavaScript. By leveraging this issue, an attacker is able to cause arbitrary HTML and JavaScript code to be executed in a user's browser within the security context of the affected site. This attack can be used in conjunction with a social engineering techniques.
 
 
 
-Reflected XSS 1
-
+Reflected XSS in URL Path
+-------------------------
 Request:
 GET /login.php/%22%3E%3Cscript%3Ealert(%22IthacaLabs%22)%3C/script%3E%22%3Cform%20name=%22form%22%20action=%22/login.php HTTP/1.1
 Host: 1.1.1.1
@@ -29,8 +29,8 @@ Affected Code:
 
 
 
-Reflected XSS 2
-
+Reflected XSS in Username Parameter
+-----------------------------------
 Request:
 POST /_/login.php HTTP/1.1
 Host: 1.1.1.1
